@@ -100,3 +100,25 @@ Route::post('/session/{id}', function (Request $request, $id) {
     $session->save();
     return response()->json(['status' => 'success']);
 });
+
+
+Route::get('/status', function (Request $request) {
+    $result = [];
+
+    $sql = 'select rooms.id as room_id, sessions.id as session_id, sessions.start_at, sessions.user_id, sessions.user_name, sessions.user_picture FROM rooms LEFT OUTER JOIN sessions on rooms.id = sessions.room_id AND sessions.end_at IS NULL';
+    foreach (DB::select($sql) as $room) {
+        $result[$room->room_id] = [
+            'name' => sprintf('Box %d', $room->room_id),
+            'action' => route('room_pick', ['room_id' => $room->room_id], true),
+            'session' => [
+                'start_at' => $room->start_at,
+                'user' => $room->user_id ? [
+                    'id' => $room->user_id,
+                    'name' => $room->user_name,
+                    'picture_url' => $room->user_picture,
+                ] : null
+            ]
+        ];
+    }
+    return response()->json($result);
+});
