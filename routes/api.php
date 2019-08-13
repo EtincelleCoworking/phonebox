@@ -41,7 +41,7 @@ Route::post('/room/{room_id}/auth', function (Request $request, $room_id) {
 
 
     if (!$json || !isset($json->user)) {
-        return response()->json(['status' => 'error']);
+        abort(403);
     }
 
     $session = \App\Session::createForRoomAndUser($room_id, $json->user->id);

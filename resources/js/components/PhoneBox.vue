@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-6">
                     <p>Pour utiliser cet espace (limité à 1h par &frac12; journée), saisissez votre code personnel
-                        disponible sur la page d'accueil de l'intranet ou scannez ce code</p>
+                        disponible sur la page d'accueil de l'intranet ou scannez ce code :</p>
 
                     <div class="text-center">
                         <img :src="'/storage/'+id+'.png'" width="300" height="300" style="margin-top: -15px"/>
@@ -50,7 +50,8 @@
             </div>
             <div class="col-6">
                 <div class="m-b-md">
-                    <img alt="image" class="img-fluid img-circle circle-border" :src="session.user.picture_url" v-if="session.user.picture_url">
+                    <img alt="image" class="img-fluid img-circle circle-border" :src="session.user.picture_url"
+                         v-if="session.user.picture_url">
                 </div>
             </div>
             <div class="col-6">
@@ -123,12 +124,14 @@
             axios
                 .get('/api/room/' + this.id)
                 .then(response => {
-                    _this.$set(_this, 'session', response.data.session);
-                    _this.$set(_this, 'duration', '00:00');
-                    if(_this.session.started_at){
+                    if (response.data.status === 'success') {
+                        _this.$set(_this, 'session', response.data.session);
+                        _this.$set(_this, 'duration', '00:00');
                         _this.$timer.start('updateStatus');
+                        this.updateStatus();
+                    }else{
+                        alert('Une erreur est survenue');
                     }
-                    this.updateStatus();
                 })
                 .catch(error => {
                     console.log(error);
@@ -152,7 +155,7 @@
                     axios
                         .post('/api/room/' + this.id + '/auth', {code: this.digits.join('')})
                         .then(function (response) {
-                            if (response.status === 200) {
+                            if (response.data.status === 'success') {
                                 //  console.log(response.data);
                                 //  console.log(response.data.session);
                                 _this.$set(_this, 'session', response.data.session);
@@ -161,7 +164,7 @@
                             }
                         })
                         .catch(error => {
-                            this.$set(this, 'error_msg', 'Ce code n\'est pas reconnu  (' + this.digits.join('') + ')');
+                            _this.$set(_this, 'error_msg', 'Ce code n\'est pas reconnu  (' + this.digits.join('') + ')');
                             //console.log(error);
                             //  this.errored = true;
                         })
@@ -182,7 +185,7 @@
                 }
             },
             clearDigits() {
-                this.$set(this, 'error_msg', null);
+                //this.$set(this, 'error_msg', null);
                 this.$set(this, 'current_digit_index', 0);
                 this.current_digit_index = 0;
                 for (var i = 0; i < 6; i++) {
