@@ -1,4 +1,5 @@
 TODO
+* Sauver les informations de l'utilisateur en local pour pouvoir les avoir quand on recharge une session (api/{room_id})
 * Cumuler le temps déjà passé dans la dernière demi journée
 * Confirmation d'annulation
 * Ne pas pouvoir annuler les 5 premières minutes?
