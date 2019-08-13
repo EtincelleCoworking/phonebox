@@ -50,8 +50,7 @@
             </div>
             <div class="col-6">
                 <div class="m-b-md">
-                    <img alt="image" class="img-fluid img-circle circle-border" :src="session.user.picture_url"
-                         v-if="session.user.picture_url">
+                    <img alt="image" class="img-fluid img-circle circle-border" :src="session.user.picture_url" />
                 </div>
             </div>
             <div class="col-6">

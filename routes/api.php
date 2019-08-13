@@ -54,7 +54,7 @@ Route::post('/room/{room_id}/auth', function (Request $request, $room_id) {
             'user' => [
                 'id' => $session->user_id,
                 'name' => $session->user_name,
-                'picture_url' => $session->user_profile
+                'picture_url' => $session->user_picture
             ]
         ]
     ];
