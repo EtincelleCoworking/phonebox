@@ -26,7 +26,7 @@ Route::post('/room/{room_id}/auth', function (Request $request, $room_id) {
 
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, env('API_URI').'/phonebox/auth');
+    curl_setopt($ch, CURLOPT_URL, env('API_URI') . '/phonebox/auth');
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS,
         http_build_query([
@@ -58,6 +58,35 @@ Route::post('/room/{room_id}/auth', function (Request $request, $room_id) {
             ]
         ]
     ];
+    return response()->json($result);
+});
+
+
+Route::get('/room/{room_id}', function (Request $request, $room_id) {
+    $session = \App\Session::where('room_id', $room_id)->whereNull('end_at')->first();
+    if ($session) {
+        $result = [
+            'status' => 'success',
+            'session' => [
+                'id' => $session->id,
+                'started_at' => $session->start_at,
+                'user' => [
+                    'id' => $session->user_id,
+                    'name' => sprintf('User #%d', $session->user_id),
+                    'picture_url' => ''
+                ]
+            ]
+        ];
+    } else {
+        $result = [
+            'status' => 'success',
+            'session' => [
+                'started_at' => null,
+                'user' => null
+            ]
+        ];
+    }
+
     return response()->json($result);
 });
 

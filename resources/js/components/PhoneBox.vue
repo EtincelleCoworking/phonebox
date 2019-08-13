@@ -50,7 +50,7 @@
             </div>
             <div class="col-6">
                 <div class="m-b-md">
-                    <img alt="image" class="img-fluid img-circle circle-border" :src="session.user.picture_url">
+                    <img alt="image" class="img-fluid img-circle circle-border" :src="session.user.picture_url" v-if="session.user.picture_url">
                 </div>
             </div>
             <div class="col-6">
@@ -108,6 +108,7 @@
             }
         },
         mounted() {
+            /*
             Echo.channel('phonebox')
                 .listen('.BoxUsed', (e) => {
                     //this.tasks.push(e.task);
@@ -116,12 +117,17 @@
                 .listen('.BoxReleased', (e) => {
                 })
             ;
-            /*
+            */
+            var _this = this;
+
             axios
-                .get('/json')
+                .get('/api/room/' + this.id)
                 .then(response => {
-                    console.log(response);
-                    this.tasks = response.data;
+                    _this.$set(_this, 'session', response.data.session);
+                    _this.$set(_this, 'duration', '00:00');
+                    if(_this.session.started_at){
+                        _this.$timer.start('updateStatus');
+                    }
                     this.updateStatus();
                 })
                 .catch(error => {
@@ -132,8 +138,6 @@
                     this.loading = false;
                 })
             ;
-*/
-
         },
         methods: {
             addDigit(kind) {
