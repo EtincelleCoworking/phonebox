@@ -44,7 +44,7 @@ Route::post('/room/{room_id}/auth', function (Request $request, $room_id) {
         abort(403);
     }
 
-    $session = \App\Session::createForRoomAndUser($room_id, $json->user->id);
+    $session = \App\Session::createForRoomAndUser($room_id, $json->user->id, $json->user->name, $json->user->profile_url);
 
     $result = [
         'status' => 'success',
@@ -52,9 +52,9 @@ Route::post('/room/{room_id}/auth', function (Request $request, $room_id) {
             'id' => $session->id,
             'started_at' => $session->start_at,
             'user' => [
-                'id' => $json->user->id,
-                'name' => $json->user->name,
-                'picture_url' => $json->user->profile_url
+                'id' => $session->user_id,
+                'name' => $session->user_name,
+                'picture_url' => $session->user_profile
             ]
         ]
     ];
@@ -72,8 +72,8 @@ Route::get('/room/{room_id}', function (Request $request, $room_id) {
                 'started_at' => $session->start_at,
                 'user' => [
                     'id' => $session->user_id,
-                    'name' => sprintf('User #%d', $session->user_id),
-                    'picture_url' => ''
+                    'name' => $session->user_name,
+                    'picture_url' => $session->user_profile
                 ]
             ]
         ];

@@ -43,7 +43,8 @@ class HomeController extends Controller
         if (env('API_KEY') != $request->get('api_key')) {
             abort(401);
         }
-        \App\Session::createForRoomAndUser($room_id, $request->get('user_id'));
+        \App\Session::createForRoomAndUser($room_id,
+            $request->get('user_id'), $request->get('user_name') , $request->get('user_picture'));
         return response('OK');
 
         return redirect(route('room', ['room_id' => $room_id]));
