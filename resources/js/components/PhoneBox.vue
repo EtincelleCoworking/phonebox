@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-6">
                     <p>Pour utiliser cet espace (limité à 1h par demi journée), saisissez votre code personnel
-                        disponible sur la page d'accueil de l'intranet ou scannez le code ci-dessous :</p>
+                        disponible sur la page d'accueil de l'intranet ou scannez ce code :</p>
 
                     <div class="text-center">
                         <img :src="'/storage/'+id+'.png'" width="300" height="300" style="margin-top: -15px"/>
