@@ -121,11 +121,11 @@ Route::get('/status', function (Request $request) {
         ];
     }
 
+    $headers = [
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Methods' => 'GET',
+        'Access-Control-Allow-Headers' => 'Origin, Content-Type, X-Auth-Token'
+    ];
     return response()
-        ->withHeaders([
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods' => 'GET',
-            'Access-Control-Allow-Headers' => 'Origin, Content-Type, X-Auth-Token'
-        ])
-        ->json($result);
+        ->json($result, 200, $headers);
 });
