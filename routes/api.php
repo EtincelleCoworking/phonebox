@@ -122,8 +122,10 @@ Route::get('/status', function (Request $request) {
     }
 
     return response()
-        ->header('Access-Control-Allow-Origin', '*')
-        ->header('Access-Control-Allow-Methods', 'GET')
-        ->header('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token')
+        ->withHeaders([
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods' => 'GET',
+            'Access-Control-Allow-Headers' => 'Origin, Content-Type, X-Auth-Token'
+        ])
         ->json($result);
 });
