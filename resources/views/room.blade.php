@@ -45,5 +45,20 @@
     <phone-box id="{{$room->id}}"></phone-box>
 </div>
 <script src="{{mix('js/app.js')}}"></script>
+<script type="application/javascript">
+    const app = new Vue({
+        el: '#app',
+        data() {
+            return {}
+        },
+        onIdle() {
+            console.log('onIdle');
+            window.location.reload(true);
+        },
+        onActive() {
+            console.log('onActive');
+        }
+    });
+</script>
 </body>
 </html>
