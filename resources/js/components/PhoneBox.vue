@@ -200,7 +200,7 @@
             cancelLastDigit() {
                 this.$set(this, 'error_msg', null);
                 if (this.current_digit_index > 0) {
-                    this.$set(this.digits, 'digit' + --this.current_digit_index, null);
+                    this.$set(this, 'digit' + --this.current_digit_index, null);
                 }
             },
             clearDigits() {
