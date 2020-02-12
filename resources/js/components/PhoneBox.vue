@@ -174,7 +174,7 @@
                         // check for auth
                         var _this = this;
                         axios
-                            .post('/api/room/' + this.id + '/auth', {code: this.digit0 + this.digit1 + this.digit2 + this.digit3 + this.digit4 + this.digit5})
+                            .post('/api/room/' + this.id + '/auth', {code: ''.concat(this.digit0, this.digit1, this.digit2, this.digit3, this.digit4, this.digit5)})
                             .then(function (response) {
                                 if (response.data.status === 'success') {
                                     //  console.log(response.data);
@@ -185,7 +185,7 @@
                                 }
                             })
                             .catch(error => {
-                                _this.$set(_this, 'error_msg', 'Ce code n\'est pas reconnu  (' + this.digit0 + this.digit1 + this.digit2 + this.digit3 + this.digit4 + this.digit5 + ')');
+                                _this.$set(_this, 'error_msg', 'Ce code n\'est pas reconnu  ('.concat(this.digit0, this.digit1, this.digit2, this.digit3, this.digit4, this.digit5, ')'));
                                 //console.log(error);
                                 //  this.errored = true;
                             })
