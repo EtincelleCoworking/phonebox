@@ -35,8 +35,23 @@
                     </div>
 
                     <div class="row" style="margin-bottom: 20px">
-                        <div class="col-2 text-center" style="color: #999999" v-for="digit in digits">
-                            <font-awesome-icon :icon="(digit === null)?'circle':'dot-circle'" size="3x"/>
+                        <div class="col-2 text-center" style="color: #999999">
+                            <font-awesome-icon :icon="(digit0 === null)?'circle':'dot-circle'" size="3x"/>
+                        </div>
+                        <div class="col-2 text-center" style="color: #999999">
+                            <font-awesome-icon :icon="(digit1 === null)?'circle':'dot-circle'" size="3x"/>
+                        </div>
+                        <div class="col-2 text-center" style="color: #999999">
+                            <font-awesome-icon :icon="(digit2 === null)?'circle':'dot-circle'" size="3x"/>
+                        </div>
+                        <div class="col-2 text-center" style="color: #999999">
+                            <font-awesome-icon :icon="(digit3 === null)?'circle':'dot-circle'" size="3x"/>
+                        </div>
+                        <div class="col-2 text-center" style="color: #999999">
+                            <font-awesome-icon :icon="(digit4 === null)?'circle':'dot-circle'" size="3x"/>
+                        </div>
+                        <div class="col-2 text-center" style="color: #999999">
+                            <font-awesome-icon :icon="(digit5 === null)?'circle':'dot-circle'" size="3x"/>
                         </div>
                     </div>
                 </div>
@@ -50,7 +65,7 @@
             </div>
             <div class="col-6">
                 <div class="m-b-md">
-                    <img alt="image" class="img-fluid img-circle circle-border" :src="session.user.picture_url" />
+                    <img alt="image" class="img-fluid img-circle circle-border" :src="session.user.picture_url"/>
                 </div>
             </div>
             <div class="col-6">
@@ -75,7 +90,12 @@
         data: function () {
             return {
                 current_digit_index: 0,
-                digits: [null, null, null, null, null, null],
+                digit0: null,
+                digit1: null,
+                digit2: null,
+                digit3: null,
+                digit4: null,
+                digit5: null,
                 session: {
                     started_at: null,
                     user: null
@@ -128,7 +148,7 @@
                         _this.$set(_this, 'duration', '00:00');
                         _this.$timer.start('updateStatus');
                         this.updateStatus();
-                    }else{
+                    } else {
                         alert('Une erreur est survenue');
                     }
                 })
@@ -143,52 +163,52 @@
         },
         methods: {
             addDigit(kind) {
-                //console.log('addDigit ' + kind);
-                this.$set(this.digits, this.current_digit_index, kind);
-                this.$set(this, 'current_digit_index', this.current_digit_index + 1);
-                this.$set(this, 'error_msg', null);
+                if (this.current_digit_index < 6) {
+                    //console.log('addDigit ' + kind);
+                    this.$set(this, 'digit' + this.current_digit_index++, kind);
+                    //this.digits[this.current_digit_index] = kind;
+                    //this.current_digit_index++;
+                    this.$set(this, 'error_msg', null);
 
-                if (this.current_digit_index === 6) {
-                    // check for auth
-                    var _this = this;
-                    axios
-                        .post('/api/room/' + this.id + '/auth', {code: this.digits.join('')})
-                        .then(function (response) {
-                            if (response.data.status === 'success') {
-                                //  console.log(response.data);
-                                //  console.log(response.data.session);
-                                _this.$set(_this, 'session', response.data.session);
-                                _this.$set(_this, 'duration', '00:00');
-                                _this.$timer.start('updateStatus');
-                            }
-                        })
-                        .catch(error => {
-                            _this.$set(_this, 'error_msg', 'Ce code n\'est pas reconnu  (' + this.digits.join('') + ')');
-                            //console.log(error);
-                            //  this.errored = true;
-                        })
-                        .finally(() => {
-                            this.clearDigits();
-                        })
-                    ;
-
-
+                    if (this.current_digit_index === 6) {
+                        // check for auth
+                        var _this = this;
+                        axios
+                            .post('/api/room/' + this.id + '/auth', {code: this.digit0 + this.digit1 + this.digit2 + this.digit3 + this.digit4 + this.digit5})
+                            .then(function (response) {
+                                if (response.data.status === 'success') {
+                                    //  console.log(response.data);
+                                    //  console.log(response.data.session);
+                                    _this.$set(_this, 'session', response.data.session);
+                                    _this.$set(_this, 'duration', '00:00');
+                                    _this.$timer.start('updateStatus');
+                                }
+                            })
+                            .catch(error => {
+                                _this.$set(_this, 'error_msg', 'Ce code n\'est pas reconnu  (' + this.digit0 + this.digit1 + this.digit2 + this.digit3 + this.digit4 + this.digit5 + ')');
+                                //console.log(error);
+                                //  this.errored = true;
+                            })
+                            .finally(() => {
+                                this.clearDigits();
+                            })
+                        ;
+                    }
                 }
                 // console.log(this.digits);
             },
             cancelLastDigit() {
                 this.$set(this, 'error_msg', null);
                 if (this.current_digit_index > 0) {
-                    this.$set(this, 'current_digit_index', this.current_digit_index - 1);
-                    this.$set(this.digits, this.current_digit_index, null);
+                    this.$set(this.digits, 'digit' + --this.current_digit_index, null);
                 }
             },
             clearDigits() {
                 //this.$set(this, 'error_msg', null);
+                // this.$set(this, 'current_digit_index', 0);
                 this.$set(this, 'current_digit_index', 0);
-                this.current_digit_index = 0;
                 for (var i = 0; i < 6; i++) {
-                    this.$set(this.digits, i, null);
+                    this.$set(this, 'digit' + i, null);
                 }
             },
             updateStatus() {
