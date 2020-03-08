@@ -44,7 +44,7 @@ Route::post('/room/{room_id}/auth', function (Request $request, $room_id) {
         abort(403);
     }
 
-    $session = \App\Session::createForRoomAndUser($room_id, $json->user->id, $json->user->name, $json->user->profile_url);
+    $session = \App\Session::createForRoomAndUser($room_id, $json->user->id, $json->user->name, $json->user->profile_url, $json->user->phone);
 
     $result = [
         'status' => 'success',

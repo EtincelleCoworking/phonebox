@@ -37,7 +37,7 @@ class Session extends Model
         return $this->belongsTo(Room::class);
     }
 
-    static public function createForRoomAndUser($room_id, $user_id, $user_name, $user_picture)
+    static public function createForRoomAndUser($room_id, $user_id, $user_name, $user_picture, $user_phone)
     {
         // complete previous uncompleted sessions on this room
         \App\Session::where('room_id', $room_id)
@@ -48,6 +48,7 @@ class Session extends Model
         $session->user_id = $user_id;
         $session->user_name = $user_name;
         $session->user_picture = $user_picture;
+        $session->user_phone = $user_phone;
         $session->room_id = $room_id;
         $session->start_at = date('Y-m-d H:i:s');
         $session->save();

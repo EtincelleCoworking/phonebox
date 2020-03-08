@@ -44,7 +44,8 @@ class HomeController extends Controller
             abort(401);
         }
         \App\Session::createForRoomAndUser($room_id,
-            $request->get('user_id'), $request->get('user_name') , $request->get('user_picture'));
+            $request->get('user_id'), $request->get('user_name'),
+            $request->get('user_picture'), $request->get('user_phone'));
         return response('OK');
 
         return redirect(route('room', ['room_id' => $room_id]));

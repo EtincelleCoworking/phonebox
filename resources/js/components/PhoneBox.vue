@@ -102,7 +102,6 @@
                 },
 
                 loading: true,
-                errored: false,
 
                 duration: null,
                 is_nearly_overdue: false,
@@ -110,14 +109,6 @@
                 error_msg: null
 
             }
-        },
-        computed: {
-            /*duration: function () {
-                if (null === this.started_at) {
-                    return null;
-                }
-                return moment.utc(this.started_at.diff(moment())).format('hh:mm:ss');
-            }*/
         },
         timers: {
             updateStatus: {
@@ -154,7 +145,6 @@
                 })
                 .catch(error => {
                     console.log(error);
-                    this.errored = true;
                 })
                 .finally(() => {
                     this.loading = false;
@@ -164,10 +154,7 @@
         methods: {
             addDigit(kind) {
                 if (this.current_digit_index < 6) {
-                    //console.log('addDigit ' + kind);
                     this.$set(this, 'digit' + this.current_digit_index++, kind);
-                    //this.digits[this.current_digit_index] = kind;
-                    //this.current_digit_index++;
                     this.$set(this, 'error_msg', null);
 
                     if (this.current_digit_index === 6) {
@@ -186,8 +173,6 @@
                             })
                             .catch(error => {
                                 _this.$set(_this, 'error_msg', 'Ce code n\'est pas reconnu  ('.concat(this.digit0, this.digit1, this.digit2, this.digit3, this.digit4, this.digit5, ')'));
-                                //console.log(error);
-                                //  this.errored = true;
                             })
                             .finally(() => {
                                 this.clearDigits();
@@ -204,8 +189,6 @@
                 }
             },
             clearDigits() {
-                //this.$set(this, 'error_msg', null);
-                // this.$set(this, 'current_digit_index', 0);
                 this.$set(this, 'current_digit_index', 0);
                 for (var i = 0; i < 6; i++) {
                     this.$set(this, 'digit' + i, null);
@@ -235,9 +218,6 @@
                     .catch(error => {
                         console.log(error);
                         this.$set(this, 'error_msg', response.statusText);
-                    })
-                    .finally(() => {
-
                     });
             }
         }
