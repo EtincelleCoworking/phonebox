@@ -134,7 +134,7 @@ class NotifyLongSessionCommand extends Command
         }
         $duration = $this->durationToHuman((time() - strtotime($session->start_at)) / 60);
         $this->getOutput()->writeln(sprintf('Start = %s, Now = %s, duration = %s', $session->start_at, date('Y-m-d H:i:s', time()), $duration));
-        $message_content = sprintf('@Etincelle - Box utilisé depuis %s, penses à le libérer pour les autres coworkers - Merci',
+        $message_content = sprintf('Box utilisé depuis %s, penses à le libérer pour les autres coworkers - Merci @Etincelle',
             $duration);
 
         $this->getOutput()->writeln($message_content);
