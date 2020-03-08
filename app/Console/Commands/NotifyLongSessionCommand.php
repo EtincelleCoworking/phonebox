@@ -47,15 +47,23 @@ class NotifyLongSessionCommand extends Command
             return false;
         }
 
-        $notification_delay = ((int)$this->option('delay') != 0) ?? 50;
-        $notification_frequency = ((int)$this->option('frequency') != 0) ?? 5;
+        $notification_delay = (int)$this->option('delay');
+        if (empty($notification_delay)) {
+            $notification_delay = 50;
+        }
+        $notification_frequency = (int)$this->option('frequency');
+        if (empty($notification_frequency)) {
+            $notification_frequency = 5;
+        }
+
+        $this->getOutput()->writeln(sprintf('Delay : %d, Frequency : %d', $notification_delay, $notification_frequency));
         $sessions = Session::whereNull('end_at')
             ->where(function ($query) use ($notification_delay, $notification_frequency) {
                 $query->where(function ($query) use ($notification_delay) {
                     $query->whereNull('last_notification_at')
                         ->where('start_at', '<', date('Y-m-d H:i:s', strtotime(sprintf('-%d minutes', $notification_delay))));
                 })
-                    ->orWhere('last_notification_at', '<', date('Y-m-d H:i:s', strtotime(sprintf('-%d minutes', $notification_delay + $notification_frequency))));
+                    ->orWhere('last_notification_at', '<', date('Y-m-d H:i:s', strtotime(sprintf('-%d minutes', $notification_frequency))));
             })->get();
 
         $count = count($sessions);
@@ -67,12 +75,12 @@ class NotifyLongSessionCommand extends Command
                 $this->getOutput()->writeln(sprintf('%d/%d Session started at %s by %s', $index++, $count, date('d/m/Y H:i:s', strtotime($session->start_at)), $session->user_name));
 
                 if ($notification_uuid = $this->sendNotification($session)) {
-                    $session->last_notification_at = date('Y-m-d H:i:s');
-                    $session->last_notification_uuid = $notification_uuid;
                     if ($this->option('dry-run')) {
                         $this->getOutput()->writeln(sprintf(' -- Notification muted'));
                     } else {
                         $this->getOutput()->writeln(sprintf(' -- Notified (UUID : %s)', $notification_uuid));
+                        $session->last_notification_at = date('Y-m-d H:i:s');
+                        $session->last_notification_uuid = $notification_uuid;
                         $session->save();
                     }
                 } else {
@@ -98,13 +106,34 @@ class NotifyLongSessionCommand extends Command
         return true;
     }
 
+    protected function durationToHuman($minutes)
+    {
+        $hours = floor(abs($minutes) / 60);
+        $minutes = abs($minutes) % 60;
+        $result = '';
+        if ($minutes < 0) {
+            $result .= '- ';
+        }
+        if ($hours) {
+            $result = $hours . 'h';
+        }
+
+        if ($minutes) {
+            if ($result) {
+                $result .= ' ';
+            }
+            $result .= $minutes . 'min';
+        }
+        return $result;
+    }
 
     protected function sendNotification($session)
     {
         if (empty($session->user_phone)) {
             return false;
         }
-        $duration = date('H:i', strtotime(date('Y-m-d H:i:s')) - strtotime($session->start_at));
+        $duration = $this->durationToHuman((time() - strtotime($session->start_at)) / 60);
+        $this->getOutput()->writeln(sprintf('Start = %s, Now = %s, duration = %s', $session->start_at, date('Y-m-d H:i:s', time()), $duration));
         $message_content = sprintf('@Etincelle - Box utilisé depuis %s, penses à le libérer pour les autres coworkers - Merci',
             $duration);
 
