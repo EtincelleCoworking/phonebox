@@ -43,7 +43,10 @@ class DailyUsageReportCommand extends Command
      */
     public function handle()
     {
-        $date = $this->option('date', date('Y-m-d'));
+        $date = $this->option('date');
+        if (empty($date)) {
+            $date = date('Y-m-d');
+        }
         $result = [];
         $sessions = Session::whereBetween('start_at', [sprintf('%s 00:00:00', $date), sprintf('%s 23:59:59', $date)])->get();
         foreach ($sessions as $session) {
