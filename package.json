@@ -27,12 +27,18 @@
         "@fortawesome/fontawesome-svg-core": "^1.2.19",
         "@fortawesome/free-solid-svg-icons": "^5.9.0",
         "@fortawesome/vue-fontawesome": "^0.1.6",
+        "@fullcalendar/core": "^4.4.0",
+        "@fullcalendar/daygrid": "^4.4.0",
+        "@fullcalendar/resource-timegrid": "^4.4.0",
+        "@fullcalendar/resource-timeline": "^4.4.0",
+        "@fullcalendar/timeline": "^4.4.0",
+        "@fullcalendar/vue": "^4.4.0",
         "bootstrap-vue": "^2.0.0",
         "idle-vue": "^2.0.5",
         "laravel-echo": "^1.5.4",
         "laravel-echo-server": "^1.5.5",
         "pusher-js": "^4.4.0",
-        "vue-moment": "^4.0.0",
+        "vue-moment": "^4.1.0",
         "vue-timers": "^2.0.2"
     }
 }

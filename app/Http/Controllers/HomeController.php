@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Room;
+use App\Session;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -15,8 +16,16 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $rooms = Room::orderBy('name', 'ASC')->get();
-
-        return view('index', ['rooms' => $rooms]);
+        $resources = [];
+        foreach ($rooms as $room) {
+            $resources[] = [
+                'id' => $room->id,
+                'title' => $room->name
+            ];
+        }
+        return view('index', [
+            'rooms' => $rooms,
+            'resources' => $resources]);
     }
 
     public function room(Request $request, $room_id)
@@ -50,4 +59,43 @@ class HomeController extends Controller
 
         return redirect(route('room', ['room_id' => $room_id]));
     }
+
+    public function usage(Request $request)
+    {
+        $rooms = Room::orderBy('name', 'ASC')->get();
+        $resources = [];
+        foreach ($rooms as $room) {
+            $resources[] = [
+                'id' => $room->id,
+                'title' => $room->name
+            ];
+        }
+        return view('usage', [
+            'rooms' => $rooms,
+            'resources' => $resources]);
+    }
+
+    public function api_usage(Request $request)
+    {
+        $data = [];
+        $sessions = Session::where('start_at', '>', $request->get('start'))
+            ->where('end_at', '<', $request->get('end'))
+            ->get();
+        foreach ($sessions as $session) {
+            $data[] = [
+                'title' => $session->user_name,
+                'start' => $session->start_at,
+                'end' => $session->end_at,
+                'resourceId' => $session->room_id
+            ];
+        }
+        return response()->json($data);
+    }
+    //SELECT date_format(start_at, '%d/%m/%Y') as day, user_name, TIMESTAMPDIFF(MINUTE, start_at, end_at) FROM `sessions` order by start_at desc
+
+
+    // revoir le système de notification pour ne pas avoir 1h depuis le début de la session,
+    // mais sur le temps restant dans son quota
+
+    // afficher les utilisateurs avec un quota dépassé pour pouvoir faire la police
 }

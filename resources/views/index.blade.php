@@ -12,18 +12,6 @@
     @foreach($rooms as $room)
         <li><a href="{{route('room', ['id' => $room->id])}}">{{$room->name}}</a></li>
     @endforeach
-
 </ul>
-<div id="app">
-    <b-tabs content-class="m-3">
-        <b-tab title="Toulouse" active>
-            <booking city="toulouse"/>
-        </b-tab>
-        <b-tab title="Albi">
-            <booking city="albi"/>
-        </b-tab>
-    </b-tabs>
-</div>
-<script type="application/javascript" src="{{mix('js/app.js')}}"></script>
 </body>
 </html>

@@ -12,6 +12,8 @@
 */
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/api/usage', 'HomeController@api_usage');
+Route::get('/usage', 'HomeController@usage');
 Route::get('/room/{room_id}', 'HomeController@room')->name('room');
 Route::get('/room/{room_id}/pick', 'HomeController@room_pick')->name('room_pick');
 Route::post('/room/{room_id}/pick', 'HomeController@room_picked')->name('room_picked');
