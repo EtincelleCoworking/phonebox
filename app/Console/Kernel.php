@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\DailyUsageReportCommand;
 use App\Console\Commands\NotifyLongSessionCommand;
 use App\Session;
 use Illuminate\Console\Scheduling\Schedule;
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command(NotifyLongSessionCommand::class)->everyMinute();
+        $schedule->command(DailyUsageReportCommand::class)->dailyAt('20:00');
     }
 
     /**
