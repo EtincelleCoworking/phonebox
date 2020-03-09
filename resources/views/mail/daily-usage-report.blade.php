@@ -1,10 +1,7 @@
 <table border="1">
     @foreach($items as $item)
         <tr valign="top">
-            <td>
-                {{$item['name']}}
-            </td>
-            <td>{{$item['email']}}</td>
+            <td>{{$item['name']}}</td>
             <td>{{$item['duration']}}</td>
             <td>
                 @foreach($item['sessions'] as $session)

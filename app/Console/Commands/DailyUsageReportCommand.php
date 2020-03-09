@@ -53,7 +53,6 @@ class DailyUsageReportCommand extends Command
             if (!isset($result[$session->user_id])) {
                 $result[$session->user_id] = [
                     'name' => $session->user_name,
-                    'email' => $session->user_email,
                     'duration' => 0,
                     'sessions' => []
                 ];
