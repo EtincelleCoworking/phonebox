@@ -69,8 +69,9 @@ class DailyUsageReportCommand extends Command
         usort($result, function ($a, $b) {
             return $b['duration'] - $a['duration'];
         });
-
-        Mail::to('sebastien@etincelle-coworking.com')->send(new DailyUsageReportMail($result, $date));
+        if (count($result) > 0) {
+            Mail::to('sebastien@etincelle-coworking.com')->send(new DailyUsageReportMail($result, $date));
+        }
     }
 
     protected function durationToHuman($minutes)
